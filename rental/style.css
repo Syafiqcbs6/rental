@@ -1,0 +1,536 @@
+/* -------------------- style.css -------------------- */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Poppins:wght@300;400;600&display=swap');
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html { scroll-behavior: smooth; }
+
+/* -------------------- Global -------------------- */
+body {
+  background: linear-gradient(to bottom, #000000 0%, #071029 45%, #0d2436 80%, #895032 100%);
+  color: #f4f6f8;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.6;
+}
+
+/* -------------------- Header -------------------- */
+header {
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  padding: 18px 36px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(6px);
+}
+
+header h1 {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ff6600;
+  margin: 0;
+}
+
+/* Nav container */
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  margin-left: 40px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li a {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  color: #e8eef6;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 8px;
+  transition: color 0.2s ease, transform 0.12s ease;
+}
+
+nav ul li a:hover {
+  color: #ff9b4a;
+  transform: translateY(-2px);
+}
+
+/* -------------------- Profile section -------------------- */
+.profile-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto; /* Push it to far right */
+  position: relative;
+  cursor: pointer;
+  height: 100%;
+}
+
+.profile-name {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+}
+
+.profile-pic {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid #ff8533;
+  background: url('profile.png') center/cover no-repeat;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 48px;
+  right: 0;
+  background: rgba(20, 30, 45, 0.95);
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  min-width: 140px;
+  z-index: 999;
+  transition: all 0.3s ease;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 10px 16px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+
+.dropdown-menu a:hover {
+  background: rgba(255, 133, 51, 0.2);
+}
+
+.show-menu {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* -------------------- Main Picture -------------------- */
+.mainpic {
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(13,27,42,0.6)), url("uploads/mainpic.jpg") center/cover no-repeat;
+  color: #fff;
+  text-align: center;
+  padding: 120px 20px;
+}
+
+.mainpic h2 {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 12px;
+  animation: fadeInDown 1s ease-in-out;
+}
+
+.mainpic p {
+  font-size: 1.15rem;
+  margin-bottom: 18px;
+  animation: fadeInUp 1s ease-in-out;
+}
+
+/* Transparent Buttons */
+.btn, button {
+  display: inline-block;
+  padding: 12px 25px;
+  background: transparent;
+  border: 2px solid #f39c12;
+  color: #f39c12;
+  font-weight: bold;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: 0.3s ease;
+  cursor: pointer;
+}
+
+.btn:hover, button:hover {
+  background: #f39c12;
+  color: white;
+  transform: scale(1.05);
+}
+
+/* -------------------- Cars Section -------------------- */
+.cars {
+  position: relative;
+  background: url('cars-bg.jpg') center/cover no-repeat;
+  padding: 60px 20px;
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
+}
+
+.cars::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.55);
+  z-index: 0;
+}
+
+.cars h2,
+.car-list {
+  position: relative;
+  z-index: 1;
+}
+
+.cars h2 {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 28px;
+  color: #ffb37a;
+}
+
+.car-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 22px;
+}
+
+.car-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 18px;
+  width: 280px;
+  text-align: center;
+  color: #eef6ff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.5);
+  transition: transform 0.28s ease, background 0.28s ease;
+}
+
+.car-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.car-card img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.car-card h3 {
+  font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+.car-card strong { color: #9fe5a9; }
+
+/* -------------------- Booking Section -------------------- */
+.booking {
+  position: relative;
+  background: url('secpage.jpg') center/cover no-repeat;
+  padding: 60px 20px;
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
+}
+
+.booking::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.55);
+  z-index: 0;
+}
+
+.booking h2,
+.booking form {
+  position: relative;
+  z-index: 1;
+}
+
+.booking h2 {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 18px;
+  color: #ffb37a;
+}
+
+.booking form {
+  max-width: 420px;
+  margin: 0 auto;
+  background: rgba(6, 12, 20, 0.7);
+  padding: 22px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(2,6,12,0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.booking label {
+  font-weight: 600;
+  color: #c9d6e6;
+  text-align: left;
+}
+
+.booking input,
+.booking select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(20,30,45,0.6);
+  color: #eef6ff;
+  outline: none;
+}
+
+.booking input:focus,
+.booking select:focus {
+  border: 1px solid rgba(255,150,60,0.85);
+  box-shadow: 0 6px 18px rgba(255,110,30,0.08);
+}
+
+.booking button {
+  background: linear-gradient(180deg,#ff7a1a,#ff6600);
+  border: none;
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.booking button:hover { transform: translateY(-3px); }
+
+#totalPrice {
+  color: #9fe5a9;
+  font-weight: 700;
+}
+
+/* -------------------- Contact / Testimonials / FAQ / Map -------------------- */
+.contact, .testimonials, .faq, .map {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.contact h2,
+.testimonials h2,
+.faq h2,
+.map h2 {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  color: #ffb37a;
+  margin-bottom: 20px;
+}
+
+/* -------------------- Testimonials -------------------- */
+.testimonial-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.testimonial {
+  background: rgba(6,12,20,0.6);
+  padding: 18px;
+  width: 300px;
+  border-radius: 10px;
+  color: #dbeaf8;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  transition: transform 0.2s ease;
+}
+
+.testimonial:hover { transform: translateY(-6px); }
+.testimonial p { font-style: italic; color: #cfe7ff; }
+.testimonial h4 { color: #ffd9b3; margin-top: 6px; }
+
+/* -------------------- FAQ -------------------- */
+.faq-item {
+  margin: 12px auto;
+  padding: 12px 16px;
+  border-left: 4px solid rgba(255,150,60,0.6);
+  background: rgba(10,18,28,0.5);
+  border-radius: 8px;
+  max-width: 900px;
+  transition: transform 0.18s ease;
+}
+
+.faq-item:hover { transform: translateX(4px); }
+
+/* -------------------- Modal (Sign In / Sign Up) -------------------- */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.75);
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(6px);
+}
+
+.modal-content {
+  background: rgba(20, 30, 45, 0.95);
+  color: #fff;
+  padding: 28px 24px;
+  border-radius: 16px;
+  width: 340px;
+  max-width: 90%;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+  animation: fadeInDown 0.4s ease;
+  position: relative;
+  text-align: left;
+}
+
+.modal-content h2 {
+  margin-bottom: 18px;
+  color: #ffb37a;
+  text-align: center;
+  font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+.modal-content label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+  color: #dbe2ec;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.modal-content input:focus {
+  border-color: #ff8533;
+  background: rgba(255,255,255,0.15);
+  outline: none;
+}
+
+.modal-content button {
+  margin-top: 18px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: linear-gradient(135deg, #ff8533, #ff6600);
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-content button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(255, 102, 0, 0.35);
+}
+
+.modal .close {
+  position: absolute;
+  right: 14px; top: 12px;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.2s ease;
+}
+
+.modal .close:hover { color: #ff8533; }
+
+/* Auth Links */
+.auth-switch {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 0.9rem;
+  color: #c9d6e6;
+}
+
+.auth-switch a {
+  color: #ffb37a;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.25s ease;
+}
+
+.auth-switch a:hover {
+  color: #ff8533;
+  text-decoration: underline;
+}
+
+/* -------------------- Map -------------------- */
+.map iframe {
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  width: 100%;
+  max-width: 960px;
+  height: 360px;
+}
+
+/* -------------------- Footer -------------------- */
+footer {
+  background: rgba(0,0,0,0.7);
+  color: #b7c4d6;
+  padding: 18px;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+/* -------------------- Animations -------------------- */
+@keyframes fadeInDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* -------------------- Responsive -------------------- */
+@media (max-width: 880px) {
+  .car-card { width: calc(50% - 18px); }
+}
+
+@media (max-width: 560px) {
+  header { padding: 12px 14px; flex-wrap: wrap; }
+  nav ul { flex-wrap: wrap; gap: 10px; }
+  .profile-container { margin-left: 0; margin-top: 10px; }
+  .car-card { width: 100%; }
+  .mainpic { padding: 80px 14px; }
+  .mainpic h2 { font-size: 2rem; }
+}

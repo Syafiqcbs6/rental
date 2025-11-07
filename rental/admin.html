@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | RideWithPG</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #0e1625;
+      color: white;
+      margin: 0;
+    }
+
+    header {
+      background: #141e2d;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    header h1 {
+      color: #ff8533;
+      font-size: 1.6em;
+    }
+
+    header button {
+      background: #ff8533;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    header button:hover {
+      background: #ff9b55;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      min-height: calc(100vh - 70px);
+    }
+
+    .sidebar {
+      background: #1a2538;
+      padding: 20px;
+      border-right: 2px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar h2 {
+      font-size: 1.1em;
+      color: #ff8533;
+      margin-bottom: 15px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar li {
+      padding: 10px 0;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .sidebar li:hover,
+    .sidebar li.active {
+      color: #ff8533;
+    }
+
+    .content {
+      padding: 30px;
+    }
+
+    .content-section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    /* Background image for main content area */
+.content {
+  padding: 30px;
+  position: relative;
+  background-image: url("images/admin-bg.jpg"); /* ganti dengan gambar Sya */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+/* Overlay supaya tulisan tetap jelas atas gambar */
+.content::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(14, 22, 37, 0.6); /* gelapkan sikit */
+  z-index: 0;
+}
+
+/* Pastikan semua content duduk atas overlay */
+.content > * {
+  position: relative;
+  z-index: 1;
+}
+
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    table th, table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    table th {
+      background: rgba(255,255,255,0.1);
+      color: #ff8533;
+    }
+
+    .add-car-form input {
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 6px;
+      border: none;
+      width: 100%;
+    }
+
+    .add-car-form button {
+      margin-top: 8px;
+      background: #ff8533;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .add-car-form button:hover {
+      background: #ff9b55;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Admin Dashboard</h1>
+    <button id="logoutBtn">Log Out</button>
+  </header>
+
+  <div class="dashboard">
+    <aside class="sidebar">
+      <h2>Admin Menu</h2>
+      <ul>
+        <li class="active" data-section="bookings">📋 Booking List</li>
+        <li data-section="cars">🚗 Manage Cars</li>
+        <li data-section="users">👤 Customers</li>
+      </ul>
+    </aside>
+
+    <main class="content">
+      <!-- Booking List -->
+      <section id="bookings" class="content-section active">
+        <h2>Booking List</h2>
+        <table>
+          <tr><th>Customer</th><th>Car</th><th>Date</th><th>Days</th><th>Total (RM)</th></tr>
+          <tr><td>Ahmad</td><td>SUV</td><td>2025-10-20</td><td>3</td><td>390</td></tr>
+          <tr><td>Sarah</td><td>Sports Car</td><td>2025-10-25</td><td>2</td><td>500</td></tr>
+        </table>
+      </section>
+
+      <!-- Manage Cars -->
+      <section id="cars" class="content-section">
+        <h2>Manage Cars</h2>
+        <form class="add-car-form">
+          <input type="text" id="carName" placeholder="Car Name" required>
+          <input type="number" id="carPrice" placeholder="Price per Day (RM)" required>
+          <input type="text" id="carImg" placeholder="Image URL" required>
+          <button type="button" id="addCarBtn">Add Car</button>
+        </form>
+
+        <table id="carTable">
+          <tr><th>Car</th><th>Price</th><th>Image</th></tr>
+          <tr><td>Sedan</td><td>110</td><td>sedan.jpg</td></tr>
+          <tr><td>SUV</td><td>130</td><td>suv.jpeg</td></tr>
+        </table>
+      </section>
+
+      <!-- Customers -->
+      <section id="users" class="content-section">
+        <h2>Customer List</h2>
+        <table>
+          <tr><th>Username</th><th>Email</th></tr>
+          <tr><td>ahmad12</td><td>ahmad@gmail.com</td></tr>
+          <tr><td>sarah98</td><td>sarah@yahoo.com</td></tr>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // 🚪 Logout
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("username");
+      localStorage.removeItem("role");
+      alert("Logged out successfully.");
+      window.location.href = "index.html";
+    });
+
+    // 🔄 Sidebar navigation
+    document.querySelectorAll(".sidebar li").forEach(item => {
+      item.addEventListener("click", () => {
+        document.querySelectorAll(".sidebar li").forEach(li => li.classList.remove("active"));
+        document.querySelectorAll(".content-section").forEach(sec => sec.classList.remove("active"));
+        item.classList.add("active");
+        document.getElementById(item.dataset.section).classList.add("active");
+      });
+    });
+
+    // 🚗 Add Car
+    document.getElementById("addCarBtn").addEventListener("click", () => {
+      const name = document.getElementById("carName").value.trim();
+      const price = document.getElementById("carPrice").value.trim();
+      const img = document.getElementById("carImg").value.trim();
+      if (!name || !price || !img) return alert("Please fill all fields.");
+
+      const table = document.getElementById("carTable");
+      const newRow = table.insertRow();
+      newRow.innerHTML = `<td>${name}</td><td>${price}</td><td>${img}</td>`;
+      alert("Car added successfully (demo only).");
+
+      document.getElementById("carName").value = "";
+      document.getElementById("carPrice").value = "";
+      document.getElementById("carImg").value = "";
+    });
+
+    // 🛡️ Prevent unauthorized access
+    if (localStorage.getItem("role") !== "admin") {
+      alert("Access denied. Admins only.");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

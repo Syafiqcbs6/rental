@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile | RideWithPG</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Keep your site look consistent */
+    body {
+      background: linear-gradient(to bottom, #040b17, #0a2035, #1c1b1a);
+      color: white;
+      font-family: "Bricolage Grotesque", sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    .profile-page {
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    .profile-page h2 {
+      color: #ffb37a;
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .profile-card {
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(6, 12, 20, 0.8);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .profile-card img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid #ff8533;
+      object-fit: cover;
+      margin-bottom: 20px;
+    }
+
+    .profile-card p {
+      margin: 10px 0;
+      font-size: 1rem;
+    }
+
+    .btn {
+      background: transparent;
+      color: #ffb37a;
+      border: 2px solid #ffb37a;
+      padding: 10px 24px;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #ff8533;
+      color: #000;
+    }
+
+    /* Edit form hidden by default */
+    .edit-form {
+      display: none;
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .edit-form input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+
+    footer {
+      background: #0a0a0a;
+      color: #ccc;
+      text-align: center;
+      padding: 15px;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>RideWithPG</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html#home">Home</a></li>
+        <li><a href="index.html#cars">Cars</a></li>
+        <li><a href="index.html#booking">Booking</a></li>
+        <li><a href="index.html#contact">Contact Us</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
+        <li><a href="index.html#findus">Find Us</a></li>
+      </ul>
+
+      <div class="profile-container">
+        <span class="profile-name">menmengen</span>
+        <div class="profile-pic"></div>
+        <div class="dropdown-menu">
+          <a href="profile.html">Profile</a>
+          <a href="#" id="logoutBtn">Log Out</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="profile-page">
+      <h2>Your Profile</h2>
+      <div class="profile-card">
+        <div>
+          <img src="profile.png" alt="Profile Picture" id="profileImage">
+        </div>
+        <p><strong>Username:</strong> <span id="usernameDisplay">menmengen</span></p>
+        <p><strong>Email:</strong> <span id="emailDisplay">menmengen@example.com</span></p>
+        <p><strong>Joined:</strong> October 2025</p>
+
+        <button class="btn" id="editBtn">Edit Profile</button>
+
+        <div class="edit-form" id="editForm">
+          <input type="text" id="editUsername" value="menmengen" placeholder="Enter new username">
+          <input type="email" id="editEmail" value="menmengen@example.com" placeholder="Enter new email">
+          <button class="btn" id="saveBtn">Save</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 RideWithPG SDN BHD. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Toggle edit form
+    const editBtn = document.getElementById("editBtn");
+    const editForm = document.getElementById("editForm");
+    const saveBtn = document.getElementById("saveBtn");
+    const usernameDisplay = document.getElementById("usernameDisplay");
+    const emailDisplay = document.getElementById("emailDisplay");
+
+    editBtn.addEventListener("click", () => {
+      if (editForm.style.display === "none" || editForm.style.display === "") {
+        editForm.style.display = "block";
+        editBtn.textContent = "Cancel";
+      } else {
+        editForm.style.display = "none";
+        editBtn.textContent = "Edit Profile";
+      }
+    });
+
+    saveBtn.addEventListener("click", () => {
+      const newUsername = document.getElementById("editUsername").value;
+      const newEmail = document.getElementById("editEmail").value;
+
+      usernameDisplay.textContent = newUsername;
+      emailDisplay.textContent = newEmail;
+
+      alert("Profile updated successfully!");
+      editForm.style.display = "none";
+      editBtn.textContent = "Edit Profile";
+    });
+  </script>
+</body>
+</html>
