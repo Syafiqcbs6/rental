@@ -1,5 +1,3 @@
-#COMMIT
-
 <?php
 session_start();
 include("db_connect.php");
@@ -125,14 +123,17 @@ $login_failed = isset($_GET['login']) && $_GET['login'] === 'failed';
     <ul>
       <li><a href="#home">Home</a></li>
       <li><a href="#cars">Cars</a></li>
-      <li><a href="#booking">Booking</a></li>
       <li><a href="#contact">Contact Us</a></li>
       <li><a href="#faq">FAQ</a></li>
       <li><a href="#map">Find Us</a></li>
+
       <?php if(!isset($_SESSION["username"])): ?>
         <li><a href="javascript:void(0)" id="signinBtn">Sign In</a></li>
         <li><a href="javascript:void(0)" id="signupBtn">Sign Up</a></li>
       <?php else: ?>
+        <?php if($_SESSION["role"] === "admin"): ?>
+          <li><a href="admin/index.php">Dashboard</a></li>
+        <?php endif; ?>
         <li><a href="user_bookings.php">My Bookings</a></li>
       <?php endif; ?>
     </ul>
@@ -184,29 +185,6 @@ $login_failed = isset($_GET['login']) && $_GET['login'] === 'failed';
   }
   ?>
   </div>
-</section>
-
-<section id="booking" class="booking">
-  <h2>Book a Car</h2>
-  <form id="bookingForm">
-    <label for="car">Select Car:</label>
-    <select id="car" name="car">
-      <option value="sedan">Sedan</option>
-      <option value="suv">SUV</option>
-      <option value="sports">Sports Car</option>
-      <option value="hatchback">Hatchback</option>
-      <option value="ev">Electric</option>
-      <option value="luxury">Luxury Car</option>
-      <option value="muscle">Muscle</option>
-      <option value="minivan">Minivan</option>
-    </select>
-    <label for="date">Pick-up Date:</label>
-    <input type="date" id="date" name="date" required>
-    <label for="days">Number of Days:</label>
-    <input type="number" id="days" name="days" min="1" required>
-    <p id="totalPrice"><strong>Total Price: RM 0</strong></p>
-    <button type="submit">Book Now</button>
-  </form>
 </section>
 
 <section id="contact" class="contact">
@@ -301,42 +279,6 @@ document.addEventListener("DOMContentLoaded", () => {
     signinModal.style.display="flex";
     alert("Login failed. Please check your username and password.");
   <?php endif; ?>
-
-  // Booking form price calculation
-  const carSelect = document.getElementById('car');
-  const daysInput = document.getElementById('days');
-  const totalPrice = document.getElementById('totalPrice');
-  const prices = {
-    sedan:110, 
-    suv:130, 
-    sports:250,
-    hatchback:100,
-    ev:120,
-    luxury:400,
-    muscle:130,
-    minivan:160
-  };
-
-  function updatePrice(){
-    const car = carSelect.value;
-    const days = parseInt(daysInput.value)||0;
-    totalPrice.innerHTML=`<strong>Total Price: RM ${prices[car]*days}</strong>`;
-  }
-
-  carSelect.addEventListener('change',updatePrice);
-  daysInput.addEventListener('input',updatePrice);
-
-  // Book Now buttons
-  document.querySelectorAll('.book-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const selectedCar = btn.dataset.car;
-      carSelect.value = selectedCar;
-      daysInput.value = 1;
-      updatePrice();
-      const bookingSection = document.getElementById('booking');
-      bookingSection.scrollIntoView({behavior: 'smooth'});
-    });
-  });
 });
 </script>
 </body>

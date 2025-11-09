@@ -1,7 +1,8 @@
 <?php
 session_start();
-session_unset();   // Clear all session variables
-session_destroy(); // Destroy the session
-header("Location: /rental123/rental/index.php"); // <-- full relative path to your main page
+session_unset();
+session_destroy();
+// Gunakan jalur relatif langsung ke file index.php
+header("Location: index.php"); 
 exit;
 ?>

@@ -168,6 +168,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <h2>RideWithPG</h2>
     </div>
     <ul>
+      <li><a href="../index.php"><i class="fa-solid fa-house"></i><span>Main Page</span></a></li>
       <li><a href="index.php"><i class="fa-solid fa-chart-line"></i><span>Dashboard</span></a></li>
       <li><a href="users.php"><i class="fa-solid fa-users"></i><span>Users</span></a></li>
       <li><a href="bookings.php"><i class="fa-solid fa-calendar-check"></i><span>Bookings</span></a></li>

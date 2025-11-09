@@ -96,13 +96,15 @@ CREATE TABLE `cars` (
 --
 
 INSERT INTO `cars` (`id`, `model`, `brand`, `price_per_day`, `image`, `availability_status`) VALUES
-(2, 'alala', 'perodua', 120.00, NULL, 'Available'),
-(3, 'EV', 'Tesla Model S', 150.00, NULL, 'Available'),
-(4, 'm3', 'bmw', 300.00, '1761743377_ev.jpg', 'Available'),
-(5, 'SYM', 'syx', 120.00, '1761744624_Screenshot_2025-10-28_143607-removebg-preview.png', 'Available'),
-(7, 'myvi', 'perodua', 150.00, 'perodua-myvi-front-angle-low-view-485010.jpg', 'Available'),
-(8, 'AMG GT', 'Mercedes', 300.00, '1762110678_amg.jpeg', 'Not Available'),
-(9, 'kancil turbo', 'perodua', 300.00, '1762175732_amg.jpeg', 'Available');
+(2, 'VELLFIRE', 'TOYOTA', 250.00, 'vellfire.jpg', 'Available'),
+(3, 'MODEL s', 'TESLA', 150.00, 'model s.png', 'Available'),
+(4, 'SEAL', 'BYD', 120.00, '1761743377_ev.jpg', 'Available'),
+(5, 'M4 COMPETITION', 'BMW', 1500.00, 'm4.jpg', 'Available'),
+(7, 'MYVI', 'PERODUA', 150.00, 'perodua-myvi-front-angle-low-view-485010.jpg', 'Available'),
+(8, 'AMG GT', 'MERCEDES', 300.00, '1762110678_amg.jpeg', 'Not Available'),
+(9, 'RAPTOR 4X4', 'FORD', 450.00, '4x4.jpg', 'Available');
+(10, 'X70', 'PROTON', 110.00, 'x70.jpg', 'Available');
+(11, 'TYPE R', 'HONDA', 245.00, 'type r.jpg', 'Available');
 
 -- --------------------------------------------------------
 

@@ -2,7 +2,7 @@
 session_start();
 include("db_connect.php");
 
-// Check if user is logged in
+// Check login
 if (!isset($_SESSION['user_id'])) {
   header("Location: login.php");
   exit;
@@ -10,16 +10,21 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Check if we have a booking success message from redirect
-$booking_success = isset($_GET['success']) && $_GET['success'] == 1;
+// Handle cancel booking
+if (isset($_GET['cancel'])) {
+  $booking_id = intval($_GET['cancel']);
+  $update_sql = "UPDATE bookings SET status = 'cancelled' WHERE id = $booking_id AND user_id = $user_id";
+  mysqli_query($conn, $update_sql);
+  header("Location: user_bookings.php?cancelled=1");
+  exit;
+}
 
-// Fetch all bookings for the current user
+// Fetch bookings
 $sql = "SELECT b.*, c.model AS car_name, c.image 
         FROM bookings b 
         JOIN cars c ON b.car_id = c.id 
         WHERE b.user_id = $user_id 
         ORDER BY b.id DESC";
-
 $result = mysqli_query($conn, $sql);
 ?>
 
@@ -28,12 +33,8 @@ $result = mysqli_query($conn, $sql);
 <head>
   <meta charset="UTF-8">
   <title>My Bookings - RideWithPG</title>
-
-  <!-- Main site CSS -->
   <link rel="stylesheet" href="style.css">
-
   <style>
-    /* -------------------- Back Button -------------------- */
     a.back {
       display: inline-block;
       margin: 40px 0 20px 20px;
@@ -53,44 +54,106 @@ $result = mysqli_query($conn, $sql);
       background: linear-gradient(135deg, #ff9b4a, #ff7a1a);
     }
 
-    /* -------------------- Booking Cards -------------------- */
     .bookings-container {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 22px;
       margin-top: 30px;
+      padding: 0 20px;
     }
+
     .booking-card {
       background: rgba(6,12,20,0.7);
       padding: 18px;
-      border-radius: 12px;
+      border-radius: 14px;
       box-shadow: 0 10px 30px rgba(2,6,12,0.6);
       color: #eef6ff;
       text-align: center;
       transition: transform 0.28s ease, background 0.28s ease;
+      overflow: hidden;
+      position: relative;
     }
+
     .booking-card:hover {
       transform: translateY(-6px);
       background: rgba(255,255,255,0.08);
     }
+
     .booking-card img {
       width: 100%;
       border-radius: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
-    .booking-info p {
+
+    .booking-main p {
       margin: 6px 0;
       color: #cfe7ff;
     }
+
+    /* STATUS COLORS */
     .status {
       font-weight: 700;
       text-transform: capitalize;
     }
-    .status.pending { color: #ffc107; }
-    .status.approved { color: #28a745; }
-    .status.cancelled { color: #dc3545; }
+    .status.pending {
+      color: #ffc107; /* yellow */
+    }
+    .status.approved {
+      color: #28a745; /* green */
+    }
+    .status.rejected,
+    .status.cancelled {
+      color: #dc3545; /* red */
+    }
 
-    /* -------------------- Toast Notification -------------------- */
+    .btn-group {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .details-btn, .cancel-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      transition: all 0.25s ease;
+    }
+
+    .details-btn {
+      background: linear-gradient(135deg, #4f9cff, #0066cc);
+      color: white;
+    }
+    .details-btn:hover {
+      background: linear-gradient(135deg, #6fb3ff, #007bff);
+      transform: translateY(-2px);
+    }
+
+    .cancel-btn {
+      background: linear-gradient(135deg, #ff4444, #cc0000);
+      color: white;
+    }
+    .cancel-btn:hover {
+      background: linear-gradient(135deg, #ff6666, #e60000);
+      transform: translateY(-2px);
+    }
+
+    .booking-details {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: none;
+      animation: fadeSlide 0.4s ease;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     #toast {
       visibility: hidden;
       min-width: 280px;
@@ -118,13 +181,8 @@ $result = mysqli_query($conn, $sql);
     }
 
     @media (max-width: 560px) {
-      .bookings-container {
-        grid-template-columns: 1fr;
-      }
-      #toast {
-        width: 80%;
-        left: 50%;
-      }
+      .bookings-container { grid-template-columns: 1fr; }
+      #toast { width: 80%; left: 50%; }
     }
   </style>
 </head>
@@ -137,18 +195,29 @@ $result = mysqli_query($conn, $sql);
     <?php
     if (mysqli_num_rows($result) > 0) {
       while ($row = mysqli_fetch_assoc($result)) {
+        $status_lower = strtolower($row['status']); // ensure CSS class matches
         echo "
         <div class='booking-card'>
           <img src='uploads/{$row['image']}' alt='{$row['car_name']}'>
-          <div class='booking-info'>
+          <div class='booking-main'>
             <p><strong>Car:</strong> {$row['car_name']}</p>
+            <p class='status {$status_lower}'><strong>Status:</strong> {$row['status']}</p>
+          </div>
+
+          <div class='btn-group'>
+            <button class='details-btn' onclick='toggleDetails(this)'>Details</button>";
+            
+        if ($status_lower != 'cancelled') {
+          echo "<button class='cancel-btn' onclick='confirmCancel({$row['id']})'>Cancel</button>";
+        }
+
+        echo "</div>
+          <div class='booking-details'>
             <p><strong>From:</strong> {$row['start_date']}</p>
             <p><strong>To:</strong> {$row['end_date']}</p>
             <p><strong>Total:</strong> RM {$row['total_price']}</p>
-            <p class='status {$row['status']}'><strong>Status:</strong> {$row['status']}</p>
           </div>
-        </div>
-        ";
+        </div>";
       }
     } else {
       echo "<p style='text-align:center; color:#cfe7ff;'>No bookings yet.</p>";
@@ -156,23 +225,41 @@ $result = mysqli_query($conn, $sql);
     ?>
   </div>
 
-  <!-- Toast -->
-  <div id="toast">Booking successful! Pending approval.</div>
+  <div id="toast"></div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const toast = document.getElementById("toast");
+    const toast = document.getElementById("toast");
 
-      // Show toast if redirected with success
-      const bookingSuccess = localStorage.getItem('booking_success') === 'true';
-if (bookingSuccess) {
-    toast.classList.add('show');
-    setTimeout(() => {
-        toast.classList.remove('show');
-        localStorage.removeItem('booking_success'); // remove after showing
-    }, 3500);
-}
+    function showToast(msg) {
+      toast.innerText = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
 
+    function confirmCancel(id) {
+      if (confirm("Are you sure you want to cancel this booking?")) {
+        window.location.href = "user_bookings.php?cancel=" + id;
+      }
+    }
+
+    function toggleDetails(button) {
+      const details = button.parentElement.nextElementSibling;
+      if (details.style.display === "block") {
+        details.style.display = "none";
+        button.innerText = "Details";
+      } else {
+        details.style.display = "block";
+        button.innerText = "Hide Details";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("success") === "1") {
+        showToast("Booking successful! Pending approval.");
+      } else if (urlParams.get("cancelled") === "1") {
+        showToast("Booking cancelled successfully.");
+      }
     });
   </script>
 

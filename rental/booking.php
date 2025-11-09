@@ -4,8 +4,11 @@ include("db_connect.php");
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
+    echo "<script>";
+    echo "alert('Please sign in first');";
+    echo "window.location.href = 'login.php';"; 
+    echo "</script>";
+    exit; 
 }
 
 // Get car info
@@ -57,12 +60,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (mysqli_num_rows($check_result) > 0) {
         echo "<script>alert('Sorry, this car is already booked on those dates.');</script>";
     } else {
-        // Insert booking with pending status
         $sql_insert = "INSERT INTO bookings (user_id, car_id, start_date, end_date, total_price, status)
                        VALUES ($user_id, $car_id, '$start_date', '$end_date', $total_price, 'pending')";
         if (mysqli_query($conn, $sql_insert)) {
-            $booking_id = $conn->insert_id; // ambil ID booking terbaru
-            header("Location: user_pay.php?booking_id=$booking_id"); // redirect ke page payment
+            $booking_id = $conn->insert_id;
+            header("Location: user_pay.php?booking_id=$booking_id");
             exit;
         } else {
             echo "Error: " . mysqli_error($conn);
@@ -115,12 +117,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 .price { color: #9fe5a9; font-weight: 700; margin-bottom: 16px; }
 #calendar-wrapper { display: flex; justify-content: center; margin: 16px 0; }
-#calendar { border-radius: 12px; overflow: hidden; max-width: 320px; width: 100%; background: #0d1a2b; color: #fff; }
 .flatpickr-day.flatpickr-disabled { background: #333 !important; color: #999 !important; cursor: not-allowed; }
 .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange { background: #ff8533 !important; color: white !important; }
 #bookingForm { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
 #bookingForm button { background: linear-gradient(180deg,#ff7a1a,#ff6600); border: none; color: white; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: transform 0.12s ease; }
 #bookingForm button:hover { transform: translateY(-3px); }
+#totalPrice { font-weight:700; color:#9fe5a9; margin: 10px 0 0; font-size: 17px; }
 </style>
 </head>
 <body>
@@ -134,8 +136,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div id="calendar-wrapper">
         <div id="calendar"></div>
     </div>
+
     <form method="POST" id="bookingForm">
         <input type="hidden" name="booking_range" id="bookingRange" required>
+        <!-- Paparan jumlah harga -->
+        <p id="totalPrice">Total: RM 0</p>
         <button type="submit">Confirm Booking</button>
     </form>
 </div>
@@ -144,6 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const bookedDates = <?php echo json_encode($booked_dates); ?>;
+    const pricePerDay = <?php echo $car['price_per_day']; ?>;
 
     flatpickr("#calendar", {
         mode: "range",
@@ -153,9 +159,22 @@ document.addEventListener("DOMContentLoaded", function() {
         dateFormat: "Y-m-d",
         onChange: function(selectedDates, dateStr) {
             document.getElementById('bookingRange').value = dateStr;
+            const totalDisplay = document.getElementById('totalPrice');
+
+            if (selectedDates.length === 2) {
+                const start = selectedDates[0];
+                const end = selectedDates[1];
+                const days = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                const total = days * pricePerDay;
+                totalDisplay.innerText = "Total: RM " + total.toFixed(2);
+            } else if (selectedDates.length === 1) {
+                totalDisplay.innerText = "Total: RM " + pricePerDay.toFixed(2);
+            } else {
+                totalDisplay.innerText = "Total: RM 0";
+            }
         },
         onDayCreate: function(dObj, dStr, fp, dayElem) {
-            if(dayElem.classList.contains("flatpickr-disabled")) {
+            if (dayElem.classList.contains("flatpickr-disabled")) {
                 dayElem.style.backgroundColor = "#333";
                 dayElem.style.color = "#999";
                 dayElem.style.cursor = "not-allowed";

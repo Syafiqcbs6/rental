@@ -235,6 +235,7 @@ $changed = isset($_GET['changed']);
       <h2>RideWithPG</h2>
     </div>
     <ul>
+      <li><a href="../index.php"><i class="fa-solid fa-house"></i><span>Main Page</span></a></li>
       <li><a href="index.php"><i class="fa-solid fa-chart-line"></i><span>Dashboard</span></a></li>
       <li><a href="users.php"><i class="fa-solid fa-users"></i><span>Users</span></a></li>
       <li><a href="bookings.php"><i class="fa-solid fa-calendar-check"></i><span>Bookings</span></a></li>
@@ -254,7 +255,7 @@ $changed = isset($_GET['changed']);
       <h2>All Cars</h2>
       <table>
         <tr>
-          <th>ID</th>
+          <th>Bil.</th>
           <th>Image</th>
           <th>Name</th>
           <th>Model</th>
@@ -262,11 +263,13 @@ $changed = isset($_GET['changed']);
           <th>Status</th>
           <th>Actions</th>
         </tr>
-        <?php while ($row = mysqli_fetch_assoc($result)) {
-          $isNotAvailable = ($row['availability_status'] === 'Not Available');
+        <?php 
+          $bil = 1;
+          while ($row = mysqli_fetch_assoc($result)) {
+            $isNotAvailable = ($row['availability_status'] === 'Not Available');
         ?>
           <tr class="<?= $isNotAvailable ? 'not-available-row' : '' ?>">
-            <td><?= $row['id'] ?></td>
+            <td><?= $bil++ ?></td>
             <td><img src="../uploads/<?= $row['image'] ?>" alt="<?= htmlspecialchars($row['model']) ?>"></td>
             <td><?= htmlspecialchars($row['model']) ?></td>
             <td><?= htmlspecialchars($row['brand']) ?></td>
@@ -277,7 +280,6 @@ $changed = isset($_GET['changed']);
             <td>
               <a href="edit_cars.php?id=<?= $row['id'] ?>" class="btn">Edit</a>
               <a href="#" class="btn" data-action="toggle" data-id="<?= $row['id'] ?>">Change Availability</a>
-              <a href="#" class="btn" data-action="delete" data-id="<?= $row['id'] ?>">Delete</a>
             </td>
           </tr>
         <?php } ?>
@@ -328,9 +330,9 @@ $changed = isset($_GET['changed']);
 
       confirmYes.addEventListener("click", () => {
         if (currentAction === "toggle") {
-          window.location.href = `cars.php?toggle=${carId}`;
+          window.location.href = cars.php?toggle=${carId};
         } else {
-          window.location.href = `cars.php?delete=${carId}`;
+          window.location.href = cars.php?delete=${carId};
         }
       });
 

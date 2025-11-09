@@ -139,7 +139,8 @@ $totalBookings = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS tota
       font-weight: 600;
     }
 
-    .status-rejected {
+    .status-rejected,
+    .status-cancelled {
       color: #ff6b6b;
       font-weight: 600;
     }
@@ -158,6 +159,7 @@ $totalBookings = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS tota
       <h2>RideWithPG</h2>
     </div>
     <ul>
+      <li><a href="../index.php"><i class="fa-solid fa-house"></i><span>Main Page</span></a></li>
       <li><a href="index.php" class="active"><i class="fa-solid fa-chart-line"></i><span>Dashboard</span></a></li>
       <li><a href="users.php"><i class="fa-solid fa-users"></i><span>Users</span></a></li>
       <li><a href="bookings.php"><i class="fa-solid fa-calendar-check"></i><span>Bookings</span></a></li>
@@ -208,14 +210,15 @@ $totalBookings = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS tota
 
         if ($res && mysqli_num_rows($res) > 0) {
           while ($row = mysqli_fetch_assoc($res)) {
-            $statusClass = "status-" . strtolower($row['status']);
+            $status = strtolower($row['status']);
+            $statusClass = "status-" . $status;
             echo "<tr>
                     <td>{$row['id']}</td>
                     <td>{$row['username']}</td>
                     <td>{$row['model']}</td>
                     <td>{$row['start_date']}</td>
                     <td>{$row['end_date']}</td>
-                    <td class='{$statusClass}'>{$row['status']}</td>
+                    <td class='{$statusClass}'>" . ucfirst($row['status']) . "</td>
                   </tr>";
           }
         } else {

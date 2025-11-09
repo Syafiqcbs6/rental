@@ -90,10 +90,10 @@ if($_SERVER['REQUEST_METHOD'] === "POST" && isset($_FILES['payment_proof'])){
     margin-bottom: 16px;
 }
 .payment-container img.qr-code {
-    width: 180px; /* QR code size */
+    width: 180px;
     display: block;
     margin: 20px auto;
-    border: 2px solid #ff8533; /* highlight QR code */
+    border: 2px solid #ff8533;
     border-radius: 12px;
 }
 .payment-container h2, h3 { margin-bottom: 14px; }
@@ -105,6 +105,17 @@ if($_SERVER['REQUEST_METHOD'] === "POST" && isset($_FILES['payment_proof'])){
 .success-msg { color: #9fe5a9; font-weight: 600; }
 .error-msg { color: #ff5e5e; font-weight: 600; }
 .back-btn { display:inline-block; margin-bottom:16px; color:#ffb37a; text-decoration:none; }
+#printBtn {
+    background: #ff6600;
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 12px;
+}
+#printBtn:hover { background: #ff7a1a; }
 </style>
 </head>
 <body>
@@ -119,9 +130,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST" && isset($_FILES['payment_proof'])){
         <p><strong>Days rented:</strong> <?php echo $days; ?></p>
         <p><strong>Total Price:</strong> RM <?php echo $booking['total_price']; ?></p>
 
-        <!-- Highlight: QR code place -->
         <img src="uploads/qrcode.jpg" alt="Scan QR to pay" class="qr-code">
-
 
         <?php if($success_msg) echo "<p class='success-msg'>$success_msg</p>"; ?>
         <?php if($error_msg) echo "<p class='error-msg'>$error_msg</p>"; ?>
@@ -140,8 +149,93 @@ if($_SERVER['REQUEST_METHOD'] === "POST" && isset($_FILES['payment_proof'])){
         <p><strong>Total Price:</strong> RM <?php echo $booking['total_price']; ?></p>
         <p><strong>Status:</strong> <?php echo ucfirst($booking['status']); ?></p>
         <p><strong>Payment Proof:</strong> <a href="uploads/payments/<?php echo $booking['payment_proof']; ?>" target="_blank">View File</a></p>
+
+        <!-- 🔸 Tambah butang print resit -->
+        <button id="printBtn">🧾 Print Receipt</button>
     <?php endif; ?>
 </div>
+
+<!-- 🔸 Script print resit -->
+<script>
+document.getElementById("printBtn")?.addEventListener("click", () => {
+  const car = "<?php echo $booking['brand']." ".$booking['model']; ?>";
+  const startDate = "<?php echo $booking['start_date']; ?>";
+  const endDate = "<?php echo $booking['end_date']; ?>";
+  const price = "RM <?php echo $booking['total_price']; ?>";
+
+  const now = new Date();
+  const formattedDate = now.toLocaleDateString('en-MY', { day: '2-digit', month: 'short', year: 'numeric' });
+  const formattedTime = now.toLocaleTimeString('en-MY', { hour: '2-digit', minute: '2-digit' });
+  const receiptID = "RPG" + now.getFullYear().toString().slice(2) +
+                    (now.getMonth() + 1).toString().padStart(2, '0') +
+                    now.getDate().toString().padStart(2, '0') + "-" +
+                    now.getHours().toString().padStart(2, '0') +
+                    now.getMinutes().toString().padStart(2, '0');
+
+  const printWindow = window.open('', '', 'height=600,width=400');
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>RideWithPG Receipt</title>
+        <style>
+          body {
+            font-family: Poppins, sans-serif;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+          }
+          h2 {
+            text-align: center;
+            color: #222;
+          }
+          .receipt {
+            border: 1px dashed #444;
+            border-radius: 10px;
+            background: #fff;
+            padding: 15px;
+            margin-top: 20px;
+          }
+          .receipt p {
+            margin: 6px 0;
+          }
+          .logo {
+            display: block;
+            margin: 0 auto 10px auto;
+            width: 100px;
+          }
+          .footer {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #666;
+          }
+        </style>
+      </head>
+      <body>
+        <img src="PG.png" alt="RideWithPG Logo" class="logo">
+        <h2>RideWithPG Receipt</h2>
+        <div class="receipt">
+          <p><strong>Receipt No:</strong> ${receiptID}</p>
+          <p><strong>Date:</strong> ${formattedDate} — ${formattedTime}</p>
+          <hr>
+          <p><strong>Car:</strong> ${car}</p>
+          <p><strong>Start Date:</strong> ${startDate}</p>
+          <p><strong>End Date:</strong> ${endDate}</p>
+          <p><strong>Total Price:</strong> ${price}</p>
+        </div>
+        <div class="footer">
+          <p>Thank you for riding with RideWithPG!</p>
+          <p>support@ridewithpg.com</p>
+        </div>
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+  printWindow.focus();
+  printWindow.print();
+  printWindow.onafterprint = () => printWindow.close();
+});
+</script>
 
 </body>
 </html>

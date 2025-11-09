@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['booking_id'], $_POST[
     exit;
 }
 
-// Fetch all bookings including payment proof
+// Fetch all bookings
 $sql = "
 SELECT 
     b.id AS booking_id,
@@ -47,6 +47,15 @@ JOIN cars c ON b.car_id = c.id
 ORDER BY b.id DESC
 ";
 $result = $conn->query($sql);
+
+// Store all rows and reverse for "latest at bottom"
+$bookings = [];
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $bookings[] = $row;
+    }
+    $bookings = array_reverse($bookings);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,14 +70,14 @@ $result = $conn->query($sql);
       th, td { padding: 6px 10px; text-align: left; word-wrap: break-word; }
 
       /* Column widths */
-      th:nth-child(1), td:nth-child(1) { width: 5%; }  /* ID */
-      th:nth-child(2), td:nth-child(2) { width: 12%; } /* User */
-      th:nth-child(3), td:nth-child(3) { width: 20%; } /* Car */
-      th:nth-child(4), td:nth-child(4) { width: 10%; } /* From */
-      th:nth-child(5), td:nth-child(5) { width: 10%; } /* To */
-      th:nth-child(6), td:nth-child(6) { width: 10%; } /* Total */
-      th:nth-child(7), td:nth-child(7) { width: 10%; } /* Status */
-      th:nth-child(8), td:nth-child(8) { width: 23%; } /* Action */
+      th:nth-child(1), td:nth-child(1) { width: 5%; }
+      th:nth-child(2), td:nth-child(2) { width: 12%; }
+      th:nth-child(3), td:nth-child(3) { width: 20%; }
+      th:nth-child(4), td:nth-child(4) { width: 10%; }
+      th:nth-child(5), td:nth-child(5) { width: 10%; }
+      th:nth-child(6), td:nth-child(6) { width: 10%; }
+      th:nth-child(7), td:nth-child(7) { width: 10%; }
+      th:nth-child(8), td:nth-child(8) { width: 23%; }
 
       .action-btn {
           padding: 5px 10px;
@@ -85,9 +94,11 @@ $result = $conn->query($sql);
       .btn-view { background: #007bff; }
       .btn-approve:hover, .btn-reject:hover, .btn-view:hover { opacity: 0.9; transform: translateY(-1px); }
 
+      /* Status colors */
       .status.Pending { color: #ffc107; font-weight: bold; }
       .status.Approved { color: #00d26a; font-weight: bold; }
       .status.Rejected { color: #ff4747; font-weight: bold; }
+      .status.Cancelled { color: #ff4747; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -95,6 +106,7 @@ $result = $conn->query($sql);
 <div class="sidebar">
   <div class="logo"><h2>RideWithPG</h2></div>
   <ul>
+    <li><a href="../index.php"><i class="fa-solid fa-house"></i><span>Main Page</span></a></li>
     <li><a href="index.php"><i class="fa-solid fa-chart-line"></i><span>Dashboard</span></a></li>
     <li><a href="users.php"><i class="fa-solid fa-users"></i><span>Users</span></a></li>
     <li><a href="bookings.php" class="active"><i class="fa-solid fa-calendar-check"></i><span>Bookings</span></a></li>
@@ -111,7 +123,7 @@ $result = $conn->query($sql);
     <h2>All Bookings</h2>
     <table>
       <tr>
-        <th>ID</th>
+        <th>Bil.</th>
         <th>User</th>
         <th>Car</th>
         <th>From</th>
@@ -121,11 +133,12 @@ $result = $conn->query($sql);
         <th>Action</th>
       </tr>
 
-      <?php if ($result && $result->num_rows > 0): ?>
-        <?php while ($row = $result->fetch_assoc()): ?>
+      <?php if (!empty($bookings)): ?>
+        <?php $bil = 1; ?>
+        <?php foreach ($bookings as $row): ?>
           <?php $status = ucfirst(trim($row['status'])); ?>
           <tr>
-            <td><?php echo $row['booking_id']; ?></td>
+            <td><?php echo $bil++; ?></td>
             <td><?php echo htmlspecialchars($row['user_name']); ?></td>
             <td><?php echo htmlspecialchars($row['car_name']); ?></td>
             <td><?php echo htmlspecialchars($row['start_date']); ?></td>
@@ -149,7 +162,7 @@ $result = $conn->query($sql);
               <?php endif; ?>
             </td>
           </tr>
-        <?php endwhile; ?>
+        <?php endforeach; ?>
       <?php else: ?>
         <tr><td colspan="8">No bookings found.</td></tr>
       <?php endif; ?>
